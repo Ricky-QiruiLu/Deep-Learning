@@ -86,10 +86,6 @@ class NDArray:
     """A generic ND array class that may contain multipe different backends
     i.e., a Numpy backend, a native CPU backend, or a GPU backend.
 
-    This class will only contains those functions that you need to implement
-    to actually get the desired functionality for the programming examples
-    in the homework, and no more.
-
     For now, for simplicity the class only supports float32 types, though
     this can be extended if desired.
     """
