@@ -651,24 +651,3 @@ def undilate(a, axes, dilation):
     return UnDilate(axes, dilation)(a)
 
 
-class Conv(TensorOp):
-    def __init__(self, stride: Optional[int] = 1, padding: Optional[int] = 0):
-        self.stride = stride
-        self.padding = padding
-
-    def compute(self, A, B):
-        
-        raise NotImplementedError()
-        
-
-    def gradient(self, out_grad, node):
-        
-        raise NotImplementedError()
-        
-
-
-def conv(a, b, stride=1, padding=1):
-    return Conv(stride, padding)(a, b)
-
-
-
