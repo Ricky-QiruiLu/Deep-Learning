@@ -1,4 +1,4 @@
-# deep learning
+# RluTorch
 
 RluTorch is my personal deep learning library. It includes a linear algebra library and interfaces for deep learning components.
 
