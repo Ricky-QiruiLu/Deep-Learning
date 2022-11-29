@@ -197,7 +197,7 @@ class Transpose(TensorOp):
         
 
     def gradient(self, out_grad, node):
-        return (reshape(out_grad, node.inputs[0].shape), )
+        return (transpose(out_grad, axes=self.axes), )
         
 
 
