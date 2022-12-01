@@ -18,4 +18,6 @@ RluTorch is my personal deep learning library. It includes a linear algebra libr
 
     - [ops.py](https://github.com/Ricky-QiruiLu/deep_learning/blob/main/RluTorch/python/needle/ops.py) - It includes all the global operations (Op) for Tensors
 
-     - [optim.py](https://github.com/Ricky-QiruiLu/deep_learning/blob/main/RluTorch/python/needle/optim.py) - It creates Optimizers for training 
+    - [optim.py](https://github.com/Ricky-QiruiLu/deep_learning/blob/main/RluTorch/python/needle/optim.py) - It creates Optimizers for training 
+
+    - [nn.py](https://github.com/Ricky-QiruiLu/deep_learning/blob/main/RluTorch/python/needle/nn.py) - It creates modules for the network
