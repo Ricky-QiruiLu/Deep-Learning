@@ -650,4 +650,61 @@ class UnDilate(TensorOp):
 def undilate(a, axes, dilation):
     return UnDilate(axes, dilation)(a)
 
+class Conv(TensorOp):
+    def __init__(self, stride: Optional[int] = 1, padding: Optional[int] = 0):
+        self.stride = stride
+        self.padding = padding
+
+    def compute(self, A, B):
+        # padding
+        if self.padding:
+          n = self.padding
+          A_ps = A.pad(((0, 0),(n, n),(n, n),(0, 0)))
+        
+        else:
+          A_ps = A
+
+        # get the shapes
+        N,H,W,C_in = A_ps.shape
+        K,_,_,C_out = B.shape
+        Ns, Hs, Ws, Cs = A_ps.strides
+        inner_dim = K * K * C_in
+
+        T_H = H - K + 1
+        T_W = W - K + 1
+
+        if self.stride > 1:
+          T_H = math.ceil(T_H / self.stride)
+          T_W = math.ceil(T_W / self.stride)
+
+        A_ps = A_ps.as_strided(shape=(N, T_H, T_W, K, K, C_in),
+                                            strides = (Ns, Hs * self.stride, Ws * self.stride, Hs, Ws, Cs)).compact()
+        A_ps = A_ps.reshape((N * T_H * T_W, inner_dim))
+
+        # print("shapes", A.shape, A_ps.shape, B.shape, )
+        B = B.compact()
+        out = A_ps @ B.reshape((inner_dim, C_out))
+
+        return out.reshape((N,T_H,T_W,C_out))
+
+    def gradient(self, out_grad, node):
+        X, w = node.inputs
+        k = w.shape[0]
+
+        # X.grad
+        w_flip = transpose(flip(w, axes=(0, 1)), axes=(2,3))
+
+        if self.stride > 1:
+          out_grad_dila = dilate(out_grad, (1, 2), dilation=self.stride-1)
+        else:
+          out_grad_dila = out_grad
+
+        X_grad = conv(out_grad_dila, w_flip, stride=1, padding=k - 1 - self.padding)
+        w_grad = conv(transpose(X, axes=(0,3)), transpose(transpose(out_grad_dila, axes=(0,1)), axes=(1,2)), stride=1, padding=self.padding)
+        w_grad = transpose(transpose(w_grad, axes=(0,1)), axes=(1,2))
+        return (X_grad, w_grad)
+
+
+def conv(a, b, stride=1, padding=1):
+    return Conv(stride, padding)(a, b)
 
