@@ -157,6 +157,8 @@ class Value:
             return data
         return data.numpy() if not isinstance(data, tuple) else [x.numpy() for x in data]
 
+
+### Not needed in HW1
 class TensorTuple(Value):
     """Represent a tuple of tensors.
 
@@ -312,11 +314,13 @@ class Tensor(Value):
             return needle.ops.MulScalar(other)(self)
 
     def __pow__(self, other):
+        ### BEGIN YOUR SOLUTION
         if isinstance(other, Tensor):
             raise NotImplementedError()
         else:
             return needle.ops.PowerScalar(other)(self)
-        
+        ### END YOUR SOLUTION
+
     def __sub__(self, other):
         if isinstance(other, Tensor):
             return needle.ops.EWiseAdd()(self, needle.ops.Negate()(other))
@@ -371,51 +375,53 @@ def compute_gradient_of_variables(output_tensor, out_grad):
     
     # Traverse graph in reverse topological order given the output_node that we are taking gradient wrt.
     reverse_topo_order = list(reversed(find_topo_sort([output_tensor])))
+    ### BEGIN YOUR SOLUTION
     for node_i in reverse_topo_order:
         node_i.grad = sum_node_list(node_to_output_grads_list[node_i])
         
         if len(node_i.inputs) != 0:     # the node has inputs
-
             # get all the nodes with their partial_adjoints
-            partial_adjoints = node_i.op.gradient(node_i.grad, node_i) 
-            
+            partial_adjoints = node_i.op.gradient_as_tuple(node_i.grad, node_i) 
+
             for node_k, par_adj_k in zip(node_i.inputs, partial_adjoints):
                 node_to_output_grads_list[node_k].append(par_adj_k)     # update the grad_list
-    
+    ### END YOUR SOLUTION
+
 
 def find_topo_sort(node_list: List[Value]) -> List[Value]:
     """Given a list of nodes, return a topological sort list of nodes ending in them.
-
     A simple algorithm is to do a post-order DFS traversal on the given nodes,
     going backwards based on input edges. Since a node is added to the ordering
     after all its predecessors are traversed due to post-order DFS, we get a topological
     sort.
     """
+    ### BEGIN YOUR SOLUTION
     visited = set()
     topo_order = []
-
-    topo_sort_dfs(node_list[0], visited, topo_order)
-
-    return topo_order
     
+    for node in node_list:
+        if node not in visited:
+            topo_sort_dfs(node, visited, topo_order)
+    return topo_order
+    ### END YOUR SOLUTION
+
 
 def topo_sort_dfs(node, visited, topo_order):
     """Post-order DFS"""
-    # base case
-    if node.is_leaf():
-        if node not in visited:
-            topo_order.append(node)
-            visited.add(node)
-    else:
-        # move on to the inputs
-        for curr_node in node.inputs:
-            topo_sort_dfs(curr_node, visited, topo_order)
-        
-        # finally, add itself to the topo_order
-        if node not in visited:
-            topo_order.append(node)
-            visited.add(node)
-    
+    ### BEGIN YOUR SOLUTION
+    visited.add(node)
+    for input_node in node.inputs:
+        if input_node not in visited:
+            topo_sort_dfs(input_node, visited, topo_order)
+    topo_order.append(node)
+    ### END YOUR SOLUTION
+
+
+##############################
+####### Helper Methods #######
+##############################
+
+
 def sum_node_list(node_list):
     """Custom sum function in order to avoid create redundant nodes in Python sum implementation."""
     from operator import add
