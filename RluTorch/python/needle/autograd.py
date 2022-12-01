@@ -314,12 +314,12 @@ class Tensor(Value):
             return needle.ops.MulScalar(other)(self)
 
     def __pow__(self, other):
-        ### BEGIN YOUR SOLUTION
+        
         if isinstance(other, Tensor):
             raise NotImplementedError()
         else:
             return needle.ops.PowerScalar(other)(self)
-        ### END YOUR SOLUTION
+        
 
     def __sub__(self, other):
         if isinstance(other, Tensor):
@@ -375,7 +375,7 @@ def compute_gradient_of_variables(output_tensor, out_grad):
     
     # Traverse graph in reverse topological order given the output_node that we are taking gradient wrt.
     reverse_topo_order = list(reversed(find_topo_sort([output_tensor])))
-    ### BEGIN YOUR SOLUTION
+    
     for node_i in reverse_topo_order:
         node_i.grad = sum_node_list(node_to_output_grads_list[node_i])
         
@@ -385,7 +385,7 @@ def compute_gradient_of_variables(output_tensor, out_grad):
 
             for node_k, par_adj_k in zip(node_i.inputs, partial_adjoints):
                 node_to_output_grads_list[node_k].append(par_adj_k)     # update the grad_list
-    ### END YOUR SOLUTION
+    
 
 
 def find_topo_sort(node_list: List[Value]) -> List[Value]:
@@ -395,7 +395,7 @@ def find_topo_sort(node_list: List[Value]) -> List[Value]:
     after all its predecessors are traversed due to post-order DFS, we get a topological
     sort.
     """
-    ### BEGIN YOUR SOLUTION
+    
     visited = set()
     topo_order = []
     
@@ -403,18 +403,18 @@ def find_topo_sort(node_list: List[Value]) -> List[Value]:
         if node not in visited:
             topo_sort_dfs(node, visited, topo_order)
     return topo_order
-    ### END YOUR SOLUTION
+    
 
 
 def topo_sort_dfs(node, visited, topo_order):
     """Post-order DFS"""
-    ### BEGIN YOUR SOLUTION
+    
     visited.add(node)
     for input_node in node.inputs:
         if input_node not in visited:
             topo_sort_dfs(input_node, visited, topo_order)
     topo_order.append(node)
-    ### END YOUR SOLUTION
+    
 
 
 ##############################
