@@ -8,7 +8,7 @@ RluTorch is my personal deep learning library. It includes a linear algebra libr
 
     The backend could be on either CPU and GPU. Therefore, I also implement these operations for [CPU](https://github.com/Ricky-QiruiLu/deep_learning/blob/main/RluTorch/src/ndarray_backend_cpu.cc) & [GPU](https://github.com/Ricky-QiruiLu/deep_learning/blob/main/RluTorch/src/ndarray_backend_cuda.cu) with c++.
 
-2. [Deep learning components](https://github.com/Ricky-QiruiLu/deep_learning/tree/main/RluTorch/python/needle/backend_ndarray)
+2. [Deep learning components](https://github.com/Ricky-QiruiLu/deep_learning/tree/main/RluTorch/python/needle)
 
     This small package create components for deep learning networks. It is similar to PyTorch, which creates layers with Tensors. 
 
