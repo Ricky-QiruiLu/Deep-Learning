@@ -1,6 +1,6 @@
 # RluTorch
 
-RluTorch is my personal deep learning library. It includes a linear algebra library and interfaces for deep learning components.
+RluTorch is a simplified version of PyTorch. I built this Neural Network framework to understand the mechanism behind modern machine learning systems. It includes a linear algebra library and interfaces for deep learning components.
 
 1. [Linear algebra library](https://github.com/Ricky-QiruiLu/deep_learning/tree/main/RluTorch/python/needle/backend_ndarray)
 
